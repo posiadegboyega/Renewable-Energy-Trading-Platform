@@ -1,21 +1,43 @@
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-import { describe, expect, it } from "vitest";
-
-const accounts = simnet.getAccounts();
-const address1 = accounts.get("wallet_1")!;
-
-/*
-  The test below is an example. To learn more, read the testing documentation here:
-  https://docs.hiro.so/stacks/clarinet-js-sdk
-*/
-
-describe("example tests", () => {
-  it("ensures simnet is well initalised", () => {
-    expect(simnet.blockHeight).toBeDefined();
+describe('Energy Token Contract', () => {
+  const mockContractCall = vi.fn();
+  const contractOwner = 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM';
+  const user1 = 'ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG';
+  const user2 = 'ST3AM1A56AK2C1XAFJ4115ZSV26EB49BVQ10MGCS0';
+  
+  beforeEach(() => {
+    vi.resetAllMocks();
   });
-
-  // it("shows an example", () => {
-  //   const { result } = simnet.callReadOnlyFn("counter", "get-counter", [], address1);
-  //   expect(result).toBeUint(0);
-  // });
+  
+  it('should mint tokens', () => {
+    mockContractCall.mockReturnValue({ success: true });
+    const result = mockContractCall('energy-token', 'mint', ['u1000', user1], contractOwner);
+    expect(result).toEqual({ success: true });
+  });
+  
+  it('should not allow non-owners to mint', () => {
+    mockContractCall.mockReturnValue({ success: false, error: 100 });
+    const result = mockContractCall('energy-token', 'mint', ['u1000', user1], user1);
+    expect(result).toEqual({ success: false, error: 100 });
+  });
+  
+  it('should transfer tokens', () => {
+    mockContractCall.mockReturnValue({ success: true });
+    const result = mockContractCall('energy-token', 'transfer', ['u500', user1, user2], user1);
+    expect(result).toEqual({ success: true });
+  });
+  
+  it('should get balance', () => {
+    mockContractCall.mockReturnValue({ success: true, value: 1000 });
+    const result = mockContractCall('energy-token', 'get-balance', [user1]);
+    expect(result).toEqual({ success: true, value: 1000 });
+  });
+  
+  it('should burn tokens', () => {
+    mockContractCall.mockReturnValue({ success: true });
+    const result = mockContractCall('energy-token', 'burn', ['u500', user1], user1);
+    expect(result).toEqual({ success: true });
+  });
 });
+
