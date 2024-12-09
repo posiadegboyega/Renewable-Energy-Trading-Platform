@@ -9,3 +9,5 @@ Q
 !contracts/energy-marketplace.clar,2/7/276ba5e622aad57813d85f38c589ff2fc632a053
 P
  tests/energy-marketplace.test.ts,c/6/c6ea6f0812be791b0f1e25c0a5d638d60ec5ee40
+J
+contracts/smart-meter.clar,2/7/276fff6a7bad7fb80bfe00f88e9ef5451ea53695
